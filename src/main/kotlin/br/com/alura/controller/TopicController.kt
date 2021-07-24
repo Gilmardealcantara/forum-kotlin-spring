@@ -5,7 +5,10 @@ import br.com.alura.dto.TopicView
 import br.com.alura.dto.UpdateTopicForm
 import br.com.alura.model.Topic
 import br.com.alura.service.TopicService
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.util.UriComponentsBuilder
 import javax.validation.Valid
 
 @RestController
@@ -25,16 +28,19 @@ class TopicController(
     }
 
     @PostMapping
-    fun create(@RequestBody @Valid form: NewTopicForm) {
-        service.save(form)
+    fun create(@RequestBody @Valid form: NewTopicForm, uriBuilder: UriComponentsBuilder): ResponseEntity<TopicView> {
+        val topicView = service.save(form)
+        val uri = uriBuilder.path("topics/${topicView.id}").build().toUri()
+        return ResponseEntity.created(uri).body(topicView)
     }
 
     @PutMapping
-    fun update(@RequestBody @Valid form: UpdateTopicForm) {
-        service.update(form)
+    fun update(@RequestBody @Valid form: UpdateTopicForm): TopicView {
+        return service.update(form)
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun delete(@PathVariable id: Long) {
         service.delete(id)
     }
