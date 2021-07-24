@@ -2,6 +2,7 @@ package br.com.alura.service
 
 import br.com.alura.dto.NewTopicForm
 import br.com.alura.dto.TopicView
+import br.com.alura.dto.UpdateTopicForm
 import br.com.alura.mapper.TopicFormMapper
 import br.com.alura.mapper.TopicViewMapper
 import br.com.alura.model.Topic
@@ -25,5 +26,12 @@ class TopicService(
 
     fun save(form: NewTopicForm) {
         topics.add(topicFormMapper.map(form).copy(id = topics.size.toLong() + 1))
+    }
+
+    fun update(form: UpdateTopicForm) {
+        topics.find { it.id == form.id }?.let {
+            topics.remove(it)
+            topics.add(it.copy(title = form.title, message = form.message))
+        }
     }
 }
