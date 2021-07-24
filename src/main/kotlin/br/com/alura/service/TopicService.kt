@@ -34,4 +34,8 @@ class TopicService(
             topics.add(it.copy(title = form.title, message = form.message))
         }
     }
+
+    fun delete(id: Long) {
+        topics.find { it.id == id }?.let { topics.remove(it) }
+    }
 }
