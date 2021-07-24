@@ -1,6 +1,6 @@
 package br.com.alura.dto
 
-class NewTopicDto(
+class NewTopicForm(
     val title: String,
     val message: String,
     val courseId: Long,

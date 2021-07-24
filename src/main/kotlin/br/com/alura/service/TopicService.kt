@@ -1,9 +1,8 @@
 package br.com.alura.service
 
-import br.com.alura.dto.NewTopicDto
-import br.com.alura.model.Course
+import br.com.alura.dto.NewTopicForm
+import br.com.alura.dto.TopicView
 import br.com.alura.model.Topic
-import br.com.alura.model.User
 import org.springframework.stereotype.Service
 
 @Service
@@ -13,22 +12,38 @@ class TopicService(
 ) {
     private val topics: MutableList<Topic> = mutableListOf()
 
-    fun getList(): List<Topic> {
-        return topics
+    fun getList(): List<TopicView> {
+        return topics.map {
+            TopicView(
+                id = it.id,
+                title = it.title,
+                message = it.message,
+                status = it.status,
+                createdAt = it.createdAt
+            )
+        }
     }
 
-    fun getById(id: Long): Topic {
-        return topics.find { it.id == id } ?: throw IllegalArgumentException("Id not found")
+    fun getById(id: Long): TopicView {
+        return topics.find { it.id == id }?.let {
+            TopicView(
+                id = it.id,
+                title = it.title,
+                message = it.message,
+                status = it.status,
+                createdAt = it.createdAt
+            )
+        } ?: throw IllegalArgumentException("Id not found")
     }
 
-    fun save(dto: NewTopicDto) {
+    fun save(form: NewTopicForm) {
         topics.add(
             Topic(
                 id = (topics.size + 1).toLong(),
-                title = dto.title,
-                message = dto.message,
-                course = courseService.getById(dto.courseId),
-                author = userService.getById(dto.authorId)
+                title = form.title,
+                message = form.message,
+                course = courseService.getById(form.courseId),
+                author = userService.getById(form.authorId)
             )
         )
     }
