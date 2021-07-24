@@ -3,6 +3,7 @@ package br.com.alura.service
 import br.com.alura.dto.NewTopicForm
 import br.com.alura.dto.TopicView
 import br.com.alura.dto.UpdateTopicForm
+import br.com.alura.exception.NotFoundException
 import br.com.alura.mapper.TopicFormMapper
 import br.com.alura.mapper.TopicViewMapper
 import br.com.alura.model.Topic
@@ -15,14 +16,14 @@ class TopicService(
     private val topicFormMapper: TopicFormMapper
 ) {
     private val topics: MutableList<Topic> = mutableListOf()
-
+    private val notFoundExceptionMessage = "Topic not found"
     fun getList(): List<TopicView> {
         return topics.map { topicViewMapper.map(it) }
     }
 
     fun getById(id: Long): TopicView {
         return topics.find { it.id == id }?.let { topicViewMapper.map(it) }
-            ?: throw IllegalArgumentException("Id not found")
+            ?: throw NotFoundException(notFoundExceptionMessage )
     }
 
     fun save(form: NewTopicForm): TopicView {
@@ -37,10 +38,10 @@ class TopicService(
             val updatedTopic = it.copy(title = form.title, message = form.message)
             topics.add(updatedTopic)
             return topicViewMapper.map(updatedTopic)
-        } ?: throw IllegalArgumentException("Topic not found")
+        } ?: throw NotFoundException(notFoundExceptionMessage )
     }
 
     fun delete(id: Long) {
-        topics.find { it.id == id }?.let { topics.remove(it) }
+        topics.find { it.id == id }?.let { topics.remove(it) } ?: throw NotFoundException(notFoundExceptionMessage )
     }
 }
