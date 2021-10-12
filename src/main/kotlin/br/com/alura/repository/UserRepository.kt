@@ -1,0 +1,7 @@
+package br.com.alura.repository
+
+import br.com.alura.model.User
+import org.springframework.data.jpa.repository.JpaRepository
+
+interface UserRepository: JpaRepository<User, Long> {
+}

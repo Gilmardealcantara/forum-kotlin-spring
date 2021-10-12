@@ -7,41 +7,40 @@ import br.com.alura.exception.NotFoundException
 import br.com.alura.mapper.TopicFormMapper
 import br.com.alura.mapper.TopicViewMapper
 import br.com.alura.model.Topic
+import br.com.alura.repository.TopicRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
 class TopicService(
+    private val repository: TopicRepository,
     private val topicViewMapper: TopicViewMapper,
     private val topicFormMapper: TopicFormMapper
 ) {
-    private val topics: MutableList<Topic> = mutableListOf()
     private val notFoundExceptionMessage = "Topic not found"
     fun getList(): List<TopicView> {
-        return topics.map { topicViewMapper.map(it) }
+        return repository.findAll().map { topicViewMapper.map(it) }
     }
 
     fun getById(id: Long): TopicView {
-        return topics.find { it.id == id }?.let { topicViewMapper.map(it) }
-            ?: throw NotFoundException(notFoundExceptionMessage )
+        val topic = repository.findById(id).orElseThrow { NotFoundException(notFoundExceptionMessage) }
+        return topicViewMapper.map(topic)
     }
 
     fun save(form: NewTopicForm): TopicView {
-        val newTopic = topicFormMapper.map(form).copy(id = topics.size.toLong() + 1)
-        topics.add(newTopic)
+        val newTopic = topicFormMapper.map(form)
+        repository.save(newTopic)
         return topicViewMapper.map(newTopic)
     }
 
     fun update(form: UpdateTopicForm): TopicView {
-        topics.find { it.id == form.id }?.let {
-            topics.remove(it)
-            val updatedTopic = it.copy(title = form.title, message = form.message)
-            topics.add(updatedTopic)
-            return topicViewMapper.map(updatedTopic)
-        } ?: throw NotFoundException(notFoundExceptionMessage )
+        val topic = repository.findById(form.id).orElseThrow { NotFoundException(notFoundExceptionMessage) }
+        val updatedTopic = topic.copy(title = form.title, message = form.message)
+        repository.save(updatedTopic)
+        return topicViewMapper.map(updatedTopic)
     }
 
     fun delete(id: Long) {
-        topics.find { it.id == id }?.let { topics.remove(it) } ?: throw NotFoundException(notFoundExceptionMessage )
+        repository.deleteById(id)
     }
 }

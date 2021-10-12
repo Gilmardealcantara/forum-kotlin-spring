@@ -1,19 +1,10 @@
 package br.com.alura.service
 
 import br.com.alura.model.User
+import br.com.alura.repository.UserRepository
 import org.springframework.stereotype.Service
 
 @Service
-class UserService {
-    private val users: List<User>
-
-    init {
-        val user = User(
-            id = 1,
-            name = "Maria 22",
-            email = "maria22@email.com"
-        )
-        users = listOf(user)
-    }
-    fun getById(id: Long): User = users.find { it.id == id } ?: throw IllegalArgumentException("User not found with this id")
+class UserService(private val repository: UserRepository) {
+    fun getById(id: Long): User = repository.getById(id)
 }
