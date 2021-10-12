@@ -8,6 +8,8 @@ import br.com.alura.mapper.TopicFormMapper
 import br.com.alura.mapper.TopicViewMapper
 import br.com.alura.model.Topic
 import br.com.alura.repository.TopicRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
@@ -18,8 +20,8 @@ class TopicService(
     private val topicFormMapper: TopicFormMapper
 ) {
     private val notFoundExceptionMessage = "Topic not found"
-    fun getList(): List<TopicView> {
-        return repository.findAll().map { topicViewMapper.map(it) }
+    fun getList(page: Pageable): Page<TopicView> {
+        return repository.findAll(page).map { topicViewMapper.map(it) }
     }
 
     fun getById(id: Long): TopicView {

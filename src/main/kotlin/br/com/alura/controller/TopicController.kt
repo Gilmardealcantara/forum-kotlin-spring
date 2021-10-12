@@ -5,6 +5,8 @@ import br.com.alura.dto.TopicView
 import br.com.alura.dto.UpdateTopicForm
 import br.com.alura.model.Topic
 import br.com.alura.service.TopicService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -19,8 +21,8 @@ class TopicController(
 ) {
 
     @GetMapping
-    fun list(): List<TopicView> {
-        return service.getList()
+    fun list(page: Pageable): Page<TopicView> {
+        return service.getList(page)
     }
 
     @GetMapping("/{id}")
