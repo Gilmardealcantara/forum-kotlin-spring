@@ -6,5 +6,5 @@ create table course
     primary key (id)
 );
 
-insert into course(id, name, category)
-values (1, 'kotlin', 'programing');
+insert into course(id, name, category) values (1, 'kotlin', 'programing');
+insert into course(id, name, category) values (2, 'react', 'front-end');

@@ -1,6 +1,7 @@
 package br.com.alura.controller
 
 import br.com.alura.dto.NewTopicForm
+import br.com.alura.dto.TopicByCategoryDto
 import br.com.alura.dto.TopicView
 import br.com.alura.dto.UpdateTopicForm
 import br.com.alura.model.Topic
@@ -26,6 +27,11 @@ class TopicController(
     @Cacheable("topics")
     fun list(page: Pageable): Page<TopicView> {
         return service.getList(page)
+    }
+
+    @GetMapping("/report")
+    fun report(): List<TopicByCategoryDto> {
+        return service.report()
     }
 
     @GetMapping("/{id}")

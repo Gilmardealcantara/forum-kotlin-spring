@@ -1,6 +1,7 @@
 package br.com.alura.service
 
 import br.com.alura.dto.NewTopicForm
+import br.com.alura.dto.TopicByCategoryDto
 import br.com.alura.dto.TopicView
 import br.com.alura.dto.UpdateTopicForm
 import br.com.alura.exception.NotFoundException
@@ -44,5 +45,9 @@ class TopicService(
 
     fun delete(id: Long) {
         repository.deleteById(id)
+    }
+
+    fun report(): List<TopicByCategoryDto> {
+        return repository.report()
     }
 }
