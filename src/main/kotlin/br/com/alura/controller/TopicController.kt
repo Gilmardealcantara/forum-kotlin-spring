@@ -5,6 +5,8 @@ import br.com.alura.dto.TopicView
 import br.com.alura.dto.UpdateTopicForm
 import br.com.alura.model.Topic
 import br.com.alura.service.TopicService
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
@@ -21,6 +23,7 @@ class TopicController(
 ) {
 
     @GetMapping
+    @Cacheable("topics")
     fun list(page: Pageable): Page<TopicView> {
         return service.getList(page)
     }
@@ -32,6 +35,7 @@ class TopicController(
 
     @PostMapping
     @Transactional
+    @CacheEvict(value = ["topics"], allEntries = true)
     fun create(@RequestBody @Valid form: NewTopicForm, uriBuilder: UriComponentsBuilder): ResponseEntity<TopicView> {
         val topicView = service.save(form)
         val uri = uriBuilder.path("topics/${topicView.id}").build().toUri()
@@ -40,6 +44,7 @@ class TopicController(
 
     @PutMapping
     @Transactional
+    @CacheEvict(value = ["topics"], allEntries = true)
     fun update(@RequestBody @Valid form: UpdateTopicForm): TopicView {
         return service.update(form)
     }
@@ -47,6 +52,7 @@ class TopicController(
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
+    @CacheEvict(value = ["topics"], allEntries = true)
     fun delete(@PathVariable id: Long) {
         service.delete(id)
     }
