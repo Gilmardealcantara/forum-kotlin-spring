@@ -6,5 +6,5 @@ create table user
     primary key (id)
 );
 
-insert into user(id, name, email)
-values (1, 'Ana silva', 'ana@email.com');
+insert into user(id, name, email) values (1, 'Ana silva', 'ana@email.com');
+insert into user(id, name, email) values (2, 'Marcos silva', 'marcos@email.com');

@@ -26,7 +26,7 @@ class SecurityConfiguration(
     override fun configure(http: HttpSecurity) {
         http
             .authorizeRequests()
-//            .antMatchers("/topics").permitAll()
+            .antMatchers("/topics").hasAnyAuthority("WRITER_READER")
             .anyRequest()
             .authenticated()
             .and()
